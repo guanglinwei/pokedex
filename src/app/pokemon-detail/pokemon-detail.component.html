@@ -1,0 +1,173 @@
+<a routerLink="/pokemon/"><img class="home-icon" src="assets/home.svg" alt="Home button"></a>
+
+<mat-card class="pokemon-detail-card text-capitalize">
+    <mat-card-title>{{pokemon?.name || 'Unknown'}}</mat-card-title>
+    <mat-card-subtitle *ngIf="pokemon">
+        <div>
+            <span>{{genera}}  </span>
+            <b> | #{{pokemon.id}}</b>
+        </div>
+    </mat-card-subtitle>
+    <mat-card-content *ngIf="pokemon">
+
+        <mat-divider [inset]="true"></mat-divider>
+
+        <div class="flavor-text">{{flavorText}}</div>
+
+        <mat-divider [inset]="true"></mat-divider>
+
+
+
+        <!-- Pokemon Icon -->
+        <ng-template #pokemonIconTemplate>
+            <td colspan="5" [class]="typeGradientClass" class="pokemon-image-border">
+                <img src="{{pokemon?.sprites.front_default || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'}}"
+                    alt="{{pokemon?.name}}"/>
+            </td>
+        </ng-template>
+
+        <!-- Pokemon Details -->
+        <ng-template #pokemonDetailTemplate>
+            <td colspan="7">
+                <table class="pokemon-inner-detail-table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="pokemon-detail-label">Type</div>
+                                <app-type-chip [types]="pokemon.types"></app-type-chip>
+                            </td>
+                            <td>
+                                <div class="pokemon-detail-label">Abilities</div>
+                                <span *ngFor="let ability of abilities; let i = index">
+                                    <span class="pokemon-ability" matTooltip="{{ability.description}}" matTooltipShowDelay="500">{{ability.name}}</span>
+                                    <span *ngIf="ability.hidden" class="pokemon-ability-hidden">&nbsp;(Hidden)</span>
+                                    <span *ngIf="i !== abilities.length - 1">, </span>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="pokemon-detail-label">Height</div>
+                                <div>{{pokemon.height / 10}} m</div>
+                            </td>
+                            <td>
+                                <div class="pokemon-detail-label">Weight</div>
+                                <div>{{pokemon.weight / 10}} kg</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </ng-template>
+
+        <table class="pokemon-detail-table" (window:resize)="onResize($event)">
+            <tbody>
+                <tr>
+                    <ng-container *ngTemplateOutlet="pokemonIconTemplate"></ng-container>
+                    <ng-container *ngIf="screenWidth > 680">
+                        <ng-container *ngTemplateOutlet="pokemonDetailTemplate"></ng-container>
+                    </ng-container>
+                </tr>
+                <tr *ngIf="screenWidth <= 680">
+                    <ng-container *ngTemplateOutlet="pokemonDetailTemplate"></ng-container>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- <table class="pokemon-evolution-table">
+            <tbody>
+                
+            </tbody>
+            <img src="{{pokemonDetails?.sprites?.front_default || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'}}" alt="{{pokemonData.name}}" class="pokemon-card-icon center">
+        </table> -->
+    </mat-card-content>
+</mat-card>
+
+<br/>
+
+<!-- Forms -->
+<ng-template #pokemonFormsTable>
+    <div>
+        <mat-grid-list [cols]="varieties.length + pokemon?.forms?.length || 0 > 1 ? 3 : 1" rowHeight="138px" *ngIf="(pokemon && pokemon.forms) || varieties">
+            <mat-grid-tile *ngFor="let v of varieties">
+                <a [routerLink]="'/pokemon/' + v.pokemon.name">
+                    <span class="hvr-reveal">
+                        <img [src]="getSpriteUrlFromPokemonUrl(v.pokemon.url) || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'">
+                        <div>{{v.pokemon.name}}</div>
+                    </span>
+                </a>
+            </mat-grid-tile>
+            <mat-grid-tile *ngFor="let form of forms?.slice(1)">
+                <a [routerLink]="'/pokemon/' + pokemon.name">
+                    <span class="hvr-reveal">
+                        <img [src]="form.sprite || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'">
+                        <div>{{form.name}}</div>         
+                    </span>
+                </a>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </div>
+</ng-template>
+
+<!-- Evolutions -->
+<ng-template #pokemonEvolutionTable>
+    <!-- <app-evolution-tree-level [node]="evolutionChain"></app-evolution-tree-level> -->
+    <mat-grid-list [cols]="evolutionGridCols" gutterSize="24" rowHeight="96px">
+        <ng-container *ngFor="let node of evolutionChain; index as i">
+            <mat-grid-tile
+                [colspan]="1"
+                [rowspan]="node.rowspan">
+                <img *ngIf="i > 0" src="assets/right-arrow.svg" alt="Arrow" class="evolution-arrow">
+                <a [routerLink]="'/pokemon/' + node.name">
+                    <span class="hvr-reveal">       
+                        <img 
+                            [src]="node.sprite || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'" 
+                            [alt]="node.name">
+                        <div>{{node.name}}</div>
+                    </span>
+                </a>                
+            </mat-grid-tile>
+            <ng-container *ngIf="!node.evolutions || node.evolutions.length === 0">
+                <mat-grid-tile *ngFor="let i of getNumbersUpToMaxDepth(node.depth || 0)" colspan="1" rowspan="1"></mat-grid-tile>
+            </ng-container>
+        </ng-container>
+    </mat-grid-list>
+</ng-template>
+
+<table class="pokemon-additional-info-table">
+    <ng-container *ngIf="screenWidth > 680; else smallScreenTable">
+        <thead>
+            <tr>
+                <!-- <td width="{{10 * evolutionGridCols}}%">Evolutions</td> -->
+                <td class="pokemon-additional-info-header" width="50%">Evolutions</td>
+                <td class="pokemon-additional-info-header" width="50%">Forms</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="pokemon-evolution-table">
+                    <ng-container *ngTemplateOutlet="pokemonEvolutionTable"></ng-container>
+                </td>
+                <td class="pokemon-forms-table">
+                    <ng-container *ngTemplateOutlet="pokemonFormsTable"></ng-container>
+                </td>
+            </tr>
+        </tbody>
+    </ng-container>
+    <ng-template #smallScreenTable>
+        <tbody>
+            <tr>
+                <td class="pokemon-evolution-table">
+                    <div class="pokemon-additional-info-header">Evolutions</div>
+                    <ng-container *ngTemplateOutlet="pokemonEvolutionTable"></ng-container>
+                </td>
+            </tr>
+            <tr>
+                <td class="pokemon-forms-table">
+                    <div class="pokemon-additional-info-header">Forms</div>
+                    <ng-container *ngTemplateOutlet="pokemonFormsTable"></ng-container>
+                </td>
+            </tr>
+        </tbody>
+    </ng-template>    
+</table>

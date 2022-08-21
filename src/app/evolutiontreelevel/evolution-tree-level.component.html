@@ -1,0 +1,23 @@
+<table *ngIf="node && (!isOutermostNode || (node.evolutions && node.evolutions.length > 0)) else noEvolutionBlock" class="w-100">
+    <tbody>
+        <tr>
+            <td [attr.colspan]="node.evolutions?.length || 1">
+                <div *ngIf="!isOutermostNode">
+                    <img src="assets/downwards-arrow.svg" alt="Downwards arrow" class="evolution-arrow">
+                </div>
+                <img [src]="node.sprite || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'" [alt]="node.name" [routerLink]="'/pokemon/' + node.name">
+            </td>
+        </tr>
+        <tr>
+            <td *ngFor="let evolution of node.evolutions">
+                <app-evolution-tree-level [node]="evolution" [isOutermostNode]="false"></app-evolution-tree-level>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<ng-template #noEvolutionBlock>
+    <div>
+        Does not evolve
+    </div>
+</ng-template>

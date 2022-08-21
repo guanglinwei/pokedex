@@ -1,1 +1,379 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+@use 'sass:map';
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$pokedex-primary: mat.define-palette(mat.$indigo-palette);
+$pokedex-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$pokedex-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$pokedex-theme: mat.define-light-theme((
+  color: (
+    primary: $pokedex-primary,
+    accent: $pokedex-accent,
+    warn: $pokedex-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($pokedex-theme);
+
 /* You can add global styles to this file, and also import other style files */
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+$type-colors: (
+  "normal": #A8A77A,
+  "fire": #EE8130,
+  "water": #6390F0,
+  "electric": #F7D02C,
+  "grass": #7AC74C,
+  "ice": #96D9D6,
+  "fighting": #C22E28,
+  "poison": #A33EA1,
+  "ground": #E2BF65,
+  "flying": #A98FF3,
+  "psychic": #F95587,
+  "bug": #A6B91A,
+  "rock": #B6A136,
+  "ghost": #735797,
+  "dragon": #6F35FC,
+  "dark": #705746,
+  "steel": #B7B7CE,
+  "fairy": #D685AD
+);
+
+@each $type, $color in $type-colors {
+  .type-#{$type} {
+    background-color: $color !important;
+  }
+}
+
+@each $type1, $color1 in $type-colors {
+  @each $type2, $color2 in $type-colors {
+    .type-gradient-#{$type1}-#{$type2} {
+      border-image: linear-gradient(to right, $color1 50%, $color2 50%);
+      border-image-slice: 1;
+    }
+  }
+}
+
+// @mixin type-gradient($type1, $type2) {
+
+// }
+// .type-gradient-#{$type1}-#{$type2} {
+
+// }
+
+mat-chip {
+  text-transform: capitalize;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  color: white !important;
+  cursor: pointer !important;
+  &:hover::after {
+    opacity: 0% !important;
+  }
+}
+
+
+mat-grid-list {
+  margin: 4%;
+  // margin-left: 4%;
+  // margin-right: 4%;
+  padding-top: 16px;
+  //min-height: 100%;
+
+}
+
+mat-grid-tile {
+  overflow: visible !important;
+}
+
+// mat-grid-tile-content {
+//   align-items: ;
+// }
+
+app-pokemon {
+  width: 90%;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.prev-next-buttons {
+  width: fit-content;
+  margin: auto;
+}
+
+.list-button {
+  margin-right: 8px;
+  margin-left: 8px;
+}
+
+mat-card-header {
+  @include flex-center;
+}
+
+.pokemon-card-link {
+  text-decoration: none;
+}
+
+mat-chip-list {
+  @include flex-center;
+}
+
+.pokemon-detail-card {
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 24px;
+  text-align: center;
+  border-color: darkslategray;
+  border-width: 2px;
+  border-style: solid;
+
+  // mat-card-content {
+  //   text-transform: none !important;
+  // }
+
+  .flavor-text {
+    text-transform: none !important;
+    font-style: italic;
+  }
+
+  img {
+    width: 100%;
+    max-width: 192px;
+    // border-width: 4px;
+    // border-style: solid;
+    height: auto;
+  }
+
+  // td, tr {
+  //   text-align: center;
+  //   margin: auto;
+  // }
+  table {
+    margin: auto;
+    border-collapse: separate;
+    margin-top: 8px;
+  }
+
+  td {
+    border-style: solid;
+    border-width: 2px;
+    border-color: darkgray;
+    border-radius: 6px;
+  }
+
+  .pokemon-image-border {
+    border-width: 4px;
+    img {
+      min-width: 96px;
+    }
+  }
+
+  .pokemon-detail-table {
+    width: 90%;
+    text-transform: none !important;
+  }
+
+  .pokemon-detail-label {
+    border-radius: 6px;
+    background-color: whitesmoke;
+    font-weight: 600;
+    margin-bottom: 1px;
+  }
+
+  .pokemon-inner-detail-table {
+    width: 100%;
+  }
+
+  .pokemon-ability {
+    // text-decoration: underline dotted;
+    border-bottom: 1px dotted black;
+    text-transform: capitalize;
+    cursor: help;
+    display: inline-block;
+  }
+
+  .pokemon-ability-hidden {
+    font-size: small;
+    color: grey;
+    display: inline-block;
+  }
+}
+
+.pokemon-additional-info-table {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  text-transform: capitalize;
+
+  .pokemon-additional-info-header {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
+}
+
+.pokemon-evolution-table {
+  border: 2px solid darkslategrey;
+  // border-radius: 4px;
+  margin-left: auto;
+  margin-right: auto;
+  // width: fit-content;
+  text-align: center;
+  padding: 4px;
+  text-transform: capitalize;  
+
+  mat-grid-tile { 
+    img:not(.evolution-arrow) {
+      width: 100%;
+      max-width: 96px;
+      height: auto;
+    }
+    a {
+      width: 100%;
+    }
+    span {
+      width: 100%;
+      border: 1px solid darkgrey;
+      border-radius: 2px;
+    }
+  }
+
+  // table {
+  //   margin-left: auto;
+  //   margin-right: auto;
+  //   width: 100%;
+  // }
+
+  // tr {
+  //   text-align: center;
+  // }
+
+  // td {
+  //   text-align: center;
+  // }
+
+  // table td + td {
+  //   border-left: 1px solid darkgrey;
+  // }
+}
+
+.pokemon-forms-table {
+  border: 2px solid darkslategrey;
+  // border-radius: 4px;
+  margin-left: auto;
+  margin-right: auto;
+  // width: fit-content;
+  text-align: center;
+  padding: 4px;
+
+  mat-grid-tile {
+    img {
+      width: 100%;
+      max-width: 96px;
+      height: auto;
+    }
+    a {
+      width: 100%;
+      height: 100%;
+    }
+    span {
+      width: 100%;
+      height: 100%;
+      border: 1px solid darkgrey;
+      border-radius: 2px;
+    }
+  }
+}
+
+.evolution-arrow {
+  height: 20px;
+  width: auto;
+  margin-right: 8px;
+  position: absolute;
+  left: -21px;
+}
+
+.home-icon {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  height: 54px;
+  width: auto;
+  box-shadow: 0 0 1px rgba(0, 0, 0, .87);
+  border-radius: 18px;
+  padding: 12px;
+}
+
+/* Reveal */
+.hvr-reveal {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-color: darkslategrey;
+    border-style: solid;
+    border-width: 0;
+    -webkit-transition-property: border-width;
+    transition-property: border-width;
+    -webkit-transition-duration: 0.1s;
+    transition-duration: 0.1s;
+    -webkit-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
+  }
+
+  &:hover:before, &:focus:before, &:active:before {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    border-width: 4px;
+  }
+}
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+
+// html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

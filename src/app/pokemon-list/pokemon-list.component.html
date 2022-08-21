@@ -1,0 +1,18 @@
+<div>Search Bar</div>
+<input matInput placeholder="Pokemon Name" (input)="search($event)" [value]="queryOnRedirect"/>
+
+<button (click)="previous()">Prev</button>
+<button (click)="next()">Next</button>
+
+<span> Page {{getCurrentPage()}}</span>
+
+<mat-grid-list [cols]="pokemonPerRow" rowHeight="232px" gutterSize="4" (window:resize)="onResize($event)">
+  <mat-grid-tile *ngFor="let pokemon of pokemonList">
+    <app-pokemon [pokemonData]="pokemon"></app-pokemon>
+  </mat-grid-tile>
+</mat-grid-list>
+
+<div class="prev-next-buttons">
+  <button (click)="previous()" class="list-button">Prev</button>
+  <button (click)="next()" class="list-button">Next</button>
+</div>

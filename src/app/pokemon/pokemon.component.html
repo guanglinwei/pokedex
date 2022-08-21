@@ -1,0 +1,14 @@
+<a [routerLink]="['/pokemon', pokemonData.name]" class="pokemon-card-link">
+    <mat-card class="pokemon-card hvr-reveal">
+        <mat-card-header>
+            <mat-card-title class="text-capitalize">{{pokemonData.name}}</mat-card-title>
+        </mat-card-header>
+        <img src="{{pokemonDetails?.sprites?.front_default || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/0.png'}}" alt="{{pokemonData.name}}" class="pokemon-card-icon center">
+        <mat-card-content>
+             <!-- <mat-chip-list selectable="false">
+                <mat-chip *ngFor="let type of types" [ngClass]="'type-' + type">{{type}}</mat-chip>
+             </mat-chip-list> -->
+             <app-type-chip [types]="pokemonDetails?.types || []"></app-type-chip>
+        </mat-card-content>
+    </mat-card>
+</a>

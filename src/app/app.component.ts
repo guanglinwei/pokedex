@@ -1,10 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { PokemonService } from './pokemon/pokemon.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'pokedex';
+// images: https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{id}.png
+export class AppComponent implements OnInit {
+  constructor() {}
+  
+  ngOnInit(): void {
+  }
 }
