@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --base-href /pokedex/",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "ng deploy --base-href=/pokedex/ --name=\"guanglinwei\" --email=\"guanglinwei@gmail.com\" --no-silent"
   },
   "private": true,
   "dependencies": {
