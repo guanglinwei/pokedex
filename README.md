@@ -1,27 +1,19 @@
 # Pokedex
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.7.
+![Bulbasaur](src/assets/bulbasaur.png)
 
-## Development server
+A website to view details about Pokemon, built using Angular.
+The goal of this project was to learn how to display data retrieved from REST API calls to the user. 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+### Tools Used
 
-## Code scaffolding
+- [Angular](https://angular.io/)
+- [PokeAPI](https://pokeapi.co/)
+- [Angular Material](https://material.angular.io/)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Building Locally
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- Install [Git](https://git-scm.com/) and [Node.js](https://nodejs.org/en/)
+- Clone this repo
+- Go to this repo's folder and run `npm i`
+- Run `ng serve` and the site should be at *localhost:4200*.
