@@ -112,7 +112,7 @@
 <!-- Evolutions -->
 <ng-template #pokemonEvolutionTable>
     <!-- <app-evolution-tree-level [node]="evolutionChain"></app-evolution-tree-level> -->
-    <mat-grid-list [cols]="evolutionGridCols" gutterSize="24" rowHeight="96px">
+    <mat-grid-list [cols]="evolutionGridCols" gutterSize="24" rowHeight="112px">
         <ng-container *ngFor="let node of evolutionChain; index as i">
             <mat-grid-tile
                 [colspan]="1"
@@ -134,40 +134,42 @@
     </mat-grid-list>
 </ng-template>
 
-<table class="pokemon-additional-info-table">
-    <ng-container *ngIf="screenWidth > 680; else smallScreenTable">
-        <thead>
-            <tr>
-                <!-- <td width="{{10 * evolutionGridCols}}%">Evolutions</td> -->
-                <td class="pokemon-additional-info-header" width="50%">Evolutions</td>
-                <td class="pokemon-additional-info-header" width="50%">Forms</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="pokemon-evolution-table">
-                    <ng-container *ngTemplateOutlet="pokemonEvolutionTable"></ng-container>
-                </td>
-                <td class="pokemon-forms-table">
-                    <ng-container *ngTemplateOutlet="pokemonFormsTable"></ng-container>
-                </td>
-            </tr>
-        </tbody>
-    </ng-container>
-    <ng-template #smallScreenTable>
-        <tbody>
-            <tr>
-                <td class="pokemon-evolution-table">
-                    <div class="pokemon-additional-info-header">Evolutions</div>
-                    <ng-container *ngTemplateOutlet="pokemonEvolutionTable"></ng-container>
-                </td>
-            </tr>
-            <tr>
-                <td class="pokemon-forms-table">
-                    <div class="pokemon-additional-info-header">Forms</div>
-                    <ng-container *ngTemplateOutlet="pokemonFormsTable"></ng-container>
-                </td>
-            </tr>
-        </tbody>
-    </ng-template>    
-</table>
+<div class="table-container">
+    <table class="pokemon-additional-info-table">
+        <ng-container *ngIf="screenWidth > 680; else smallScreenTable">
+            <thead>
+                <tr>
+                    <!-- <td width="{{10 * evolutionGridCols}}%">Evolutions</td> -->
+                    <td class="pokemon-additional-info-header" width="50%">Evolutions</td>
+                    <td class="pokemon-additional-info-header" width="50%">Forms</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="pokemon-evolution-table">
+                        <ng-container *ngTemplateOutlet="pokemonEvolutionTable"></ng-container>
+                    </td>
+                    <td class="pokemon-forms-table">
+                        <ng-container *ngTemplateOutlet="pokemonFormsTable"></ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </ng-container>
+        <ng-template #smallScreenTable>
+            <tbody>
+                <tr>
+                    <td class="pokemon-evolution-table">
+                        <div class="pokemon-additional-info-header">Evolutions</div>
+                        <ng-container *ngTemplateOutlet="pokemonEvolutionTable"></ng-container>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="pokemon-forms-table">
+                        <div class="pokemon-additional-info-header">Forms</div>
+                        <ng-container *ngTemplateOutlet="pokemonFormsTable"></ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </ng-template>    
+    </table>
+</div>
