@@ -35,7 +35,7 @@ export class PokemonService {
     }
 
     retrieveData(url: string | undefined = undefined, returnToFirstPageIfEmptyUrl: boolean = true): Observable<any> {
-        let defaultUrl = returnToFirstPageIfEmptyUrl ? 'https://pokeapi.co/api/v2/pokemon?limit=12' : '';
+        let defaultUrl = returnToFirstPageIfEmptyUrl ? 'https://pokeapi.co/api/v2/pokemon?limit=21' : '';
         return this.http.get(url || defaultUrl);
     }
 

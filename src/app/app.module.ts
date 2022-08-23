@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PokemonComponent } from './pokemon/pokemon.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -18,6 +18,7 @@ import { PokemonDetailComponent } from './pokemon-detail/pokemon-detail.componen
 import { PokemonListComponent } from './pokemon-list/pokemon-list.component';
 import { TypeChipComponent } from './type-chip/type-chip.component'
 import { EvolutionTreeLevelComponent } from './evolutiontreelevel/evolution-tree-level.component';
+import { CachingInterceptor } from './interceptors/caching-interceptor';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,13 @@ import { EvolutionTreeLevelComponent } from './evolutiontreelevel/evolution-tree
     MatTooltipModule,
     MatIconModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CachingInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

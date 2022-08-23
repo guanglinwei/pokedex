@@ -24,6 +24,7 @@ export class PokemonListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log("Getting all pokemon");
     this.pokemonService.getAllPokemon(() => {
       this.pokemonService.goToPage(1);
       this.pokemonList = this.pokemonService.pokemonOnCurrentPage;
