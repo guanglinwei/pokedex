@@ -162,8 +162,9 @@ mat-card-header {
   text-decoration: none;
 }
 
-mat-chip-list {
+mat-chip-list * {
   @include flex-center;
+  
 }
 
 .pokemon-detail-card {
@@ -293,6 +294,10 @@ mat-chip-list {
       border: 1px solid darkgrey;
       border-radius: 2px;
     }
+
+    .scrollable {     
+      overflow-x: auto;
+    }
   }
 
   // table {
@@ -359,6 +364,7 @@ mat-chip-list {
   box-shadow: 0 0 1px rgba(0, 0, 0, .87);
   border-radius: 18px;
   padding: 12px;
+  background: whitesmoke;
 }
 
 /* Reveal */

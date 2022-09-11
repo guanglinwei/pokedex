@@ -8,7 +8,7 @@
 
     <span> Page {{getCurrentPage()}}</span>
 
-    <mat-grid-list class="pokemon-list" [cols]="pokemonPerRow" rowHeight="232px" gutterSize="4" (window:resize)="onResize($event)">
+    <mat-grid-list class="pokemon-list" [cols]="currentPokemonPerRow" rowHeight="232px" gutterSize="4">
       <mat-grid-tile *ngFor="let pokemon of pokemonList">
         <app-pokemon [pokemonData]="pokemon"></app-pokemon>
       </mat-grid-tile>

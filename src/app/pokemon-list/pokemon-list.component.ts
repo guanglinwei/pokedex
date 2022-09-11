@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PokemonService } from '../pokemon/pokemon.service';
+import { Subject, takeUntil } from 'rxjs';
+import { PokemonService } from '../services/pokemon.service';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -8,20 +11,29 @@ import { PokemonService } from '../pokemon/pokemon.service';
   styleUrls: ['./pokemon-list.component.scss']
 })
 export class PokemonListComponent implements OnInit {
-  
   title = 'pokedex';
   pokemonList: any[] = [];
   pokemonListObject: any = {};
-  pokemonPerRow: number = 3;
-  private smallScreenWidthBreakpoint: number = 680;
+  currentPokemonPerRow: number = 3;
 
   queryOnRedirect: string | null = null;
 
   constructor(
     private pokemonService: PokemonService,
+    private settings: SettingsService,
     private router: Router,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+  ) {
+    this.settings.getBreakpointObservable().subscribe((v: any) => {
+      console.log(v);
+      for(const size in v.breakpoints) {
+        if(v.breakpoints[size]) {
+          this.currentPokemonPerRow = this.settings.getBreakpointSettings(size)?.pokemonPerRow || 3;
+          console.log(this.currentPokemonPerRow);
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     console.log("Getting all pokemon");
@@ -35,7 +47,7 @@ export class PokemonListComponent implements OnInit {
       }
     });
 
-    this.pokemonPerRow = (window.innerWidth <= this.smallScreenWidthBreakpoint) ? 2 : 3;
+    // this.currentPokemonPerRow = (window.innerWidth <= this.smallScreenWidthBreakpoint) ? 2 : 3;
   }
 
   next(): void {
@@ -75,11 +87,4 @@ export class PokemonListComponent implements OnInit {
   getCurrentPage(): number {
     return this.pokemonService.currentPage;
   }
-
-  //TODO: apply this to the details screen 
-  onResize(event: Event) {
-    let e = event.target as Window;
-    this.pokemonPerRow = (e.innerWidth <= this.smallScreenWidthBreakpoint) ? 2 : 3;
-  }
-
 }

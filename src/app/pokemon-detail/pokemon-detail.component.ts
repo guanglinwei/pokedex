@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { concatMap, forkJoin, from, map, merge, mergeMap, Observable, of, tap } from 'rxjs';
 import { EvolutionChainNode } from 'src/models/evolutionchainnode';
-import { PokemonService } from '../pokemon/pokemon.service';
+import { PokemonService } from '../services/pokemon.service';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-pokemon-detail',
@@ -25,13 +26,22 @@ export class PokemonDetailComponent implements OnInit {
   varieties: any[] = [];
   forms: any[] = [];
 
-  screenWidth: number = window.innerWidth;
+  collapseDetails: boolean = false;
 
   constructor(
     private pokemonService: PokemonService,
+    private settings: SettingsService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {
+    this.settings.getBreakpointObservable().subscribe((v) => {
+      for(const size in v.breakpoints) {
+        if(v.breakpoints[size]) {
+          this.collapseDetails = !!(this.settings.getBreakpointSettings(size)?.collapsePokemonDetails); 
+        }
+      }
+    });
+  }
 
   getNumbersUpToMaxDepth(currentDepth: number): number[] {
     return Array(this.evolutionGridCols - currentDepth).fill(0);
@@ -215,12 +225,5 @@ export class PokemonDetailComponent implements OnInit {
     return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id +".png";
   }
 
-  onResize(event: Event) {
-    let e = event.target as Window;
-    this.screenWidth = e.innerWidth;
-    // this.pokemonPerRow = (e.innerWidth <= this.smallScreenWidthBreakpoint) ? 2 : 3;
-  }
-
   test(a: any) {return a;}
-
 }
