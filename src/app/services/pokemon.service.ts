@@ -19,6 +19,8 @@ export class PokemonService {
     // currentPokemonMaxIndex: number = 20;
     pokemonPerPage: number = 21;
     currentPage: number = 0;
+    totalPages: number = 0;
+    totalPagesForSearch: number = 0;
 
     mostRecentVersionId: number = 1;
     language: string = 'en';
@@ -39,27 +41,27 @@ export class PokemonService {
         return this.http.get(url || defaultUrl);
     }
 
-    // retrieveDataArray(urls: string[], ): {
-
-    // }
-
     getAllPokemon(callback: () => any = () => {}): void {
         let req = this.http.get('https://pokeapi.co/api/v2/pokemon?limit=100000');
         req.subscribe((data: any) => {
             this.allPokemon = data.results;
+            this.totalPages = Math.floor((this.allPokemon.length + this.pokemonPerPage - 1) / this.pokemonPerPage);
+            console.log(this.totalPages);
             callback();
         });
     }
 
     getPokemonOfName(name: string): Observable<any> {
-        // return this.allPokemon.find((pokemon: any) => {
-        //     console.log(pokemon);
-        //     return pokemon.name.toLowerCase() === name.toLowerCase();
-        // });
         return this.http.get('https://pokeapi.co/api/v2/pokemon/' + name);
     }
 
     searchNameContaining(query: string): void {
+        if(!query || query.length == 0) {
+            this.currentQuery = undefined;
+            this.goToPage(1);
+            return;
+        }
+
         const maxSearchResults = 99999;//this.pokemonPerPage;
         this.goToPage(1);
         let count = 0;
@@ -69,6 +71,8 @@ export class PokemonService {
             if(result) count++;
             return result && count <= maxSearchResults;
         });
+
+        this.totalPagesForSearch = Math.floor((this.pokemonSearchResults.length + this.pokemonPerPage - 1) / this.pokemonPerPage);
         this.pokemonOnCurrentPage = this.getSearchResultsOnPage(1);
     }
 
@@ -77,34 +81,44 @@ export class PokemonService {
     }
 
     goToPage(page: number): void {
+        page = Math.min(Math.max(1, page), this.totalPages);
         this.currentPage = page;
-        this.pokemonOnCurrentPage = this.allPokemon.slice((page - 1) * this.pokemonPerPage, Math.min(page * this.pokemonPerPage, this.allPokemon.length));
+
+        this.pokemonOnCurrentPage = ((this.currentQuery && this.currentQuery.length > 0) ? 
+            this.getSearchResultsOnPage(page) :
+            this.allPokemon.slice((page - 1) * this.pokemonPerPage, Math.min(page * this.pokemonPerPage, this.allPokemon.length)));
     }
 
     nextPage(): void {
         // search results
-        if(this.currentQuery && this.currentQuery.length > 0 && this.currentPage + 1 < Math.floor((this.pokemonSearchResults.length + this.pokemonPerPage - 1) / this.pokemonPerPage)) {
+        if(this.hasSearchQuery() && this.currentPage < this.totalPagesForSearch) {
             this.currentPage += 1;
             this.pokemonOnCurrentPage = this.getSearchResultsOnPage(this.currentPage);
         }
         // default page
-        else if (!(this.currentQuery && this.currentQuery.length > 0) && this.currentPage + 1 < Math.floor((this.allPokemon.length + this.pokemonPerPage - 1) / this.pokemonPerPage)) {
+        else if (!this.hasSearchQuery() && this.currentPage < this.totalPages) {
             this.goToPage(this.currentPage + 1);
         }
     }
 
     prevPage(): void {
-        if(this.currentQuery && this.currentQuery.length > 0 && this.currentPage > 1) {
+        if(this.currentPage <= 0) return;
+
+        if(this.hasSearchQuery()) {
             this.currentPage -= 1;
             this.pokemonOnCurrentPage = this.getSearchResultsOnPage(this.currentPage);
         }
-        else if (!(this.currentQuery && this.currentQuery.length > 0) && this.currentPage > 1) {
+        else {
             this.goToPage(this.currentPage - 1);
         }
     }
 
     lastPage(): void {
-        this.goToPage(Math.floor((this.allPokemon.length + this.pokemonPerPage - 1) / this.pokemonPerPage));
+        this.goToPage(this.totalPages);
+    }
+
+    hasSearchQuery(): boolean {
+        return !!this.currentQuery && this.currentQuery.length > 0;
     }
 
     formatAbilityName(name: string): string {

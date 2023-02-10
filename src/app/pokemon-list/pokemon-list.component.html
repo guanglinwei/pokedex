@@ -6,7 +6,7 @@
     <button (click)="previous()">Prev</button>
     <button (click)="next()">Next</button>
 
-    <span> Page {{getCurrentPage()}}</span>
+    <span> Page {{getCurrentPage()}} / {{getTotalPages()}}</span>
 
     <mat-grid-list class="pokemon-list" [cols]="currentPokemonPerRow" rowHeight="232px" gutterSize="4">
       <mat-grid-tile *ngFor="let pokemon of pokemonList">

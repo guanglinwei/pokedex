@@ -24,23 +24,24 @@ export class PokemonListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
   ) {
+    // Change the pokemon per row depending on window width
     this.settings.getBreakpointObservable().subscribe((v: any) => {
-      console.log(v);
       for(const size in v.breakpoints) {
         if(v.breakpoints[size]) {
           this.currentPokemonPerRow = this.settings.getBreakpointSettings(size)?.pokemonPerRow || 3;
-          console.log(this.currentPokemonPerRow);
         }
       }
     });
   }
 
   ngOnInit(): void {
-    console.log("Getting all pokemon");
+    // Get every pokemon and go to the first page
     this.pokemonService.getAllPokemon(() => {
+      this.pokemonService.currentQuery = undefined;
       this.pokemonService.goToPage(1);
       this.pokemonList = this.pokemonService.pokemonOnCurrentPage;
 
+      // Re-fill the search bar if there was a query beforehand
       this.queryOnRedirect = this.route.snapshot.queryParamMap.get('search');
       if(this.queryOnRedirect) {
         this.searchQuery(this.queryOnRedirect);
@@ -61,14 +62,8 @@ export class PokemonListComponent implements OnInit {
   }
 
   searchQuery(query: string) {
-    if(query) {
-      this.pokemonService.searchNameContaining(query);
-      this.pokemonList = this.pokemonService.pokemonOnCurrentPage;
-    }
-    else {
-      this.pokemonService.goToPage(1);
-      this.pokemonList = this.pokemonService.pokemonOnCurrentPage;
-    }
+    this.pokemonService.searchNameContaining(query);
+    this.pokemonList = this.pokemonService.pokemonOnCurrentPage;
 
     this.router.navigate([], {
       relativeTo: this.route,
@@ -86,5 +81,9 @@ export class PokemonListComponent implements OnInit {
 
   getCurrentPage(): number {
     return this.pokemonService.currentPage;
+  }
+
+  getTotalPages(): number {
+    return this.pokemonService.hasSearchQuery() ? this.pokemonService.totalPagesForSearch : this.pokemonService.totalPages;
   }
 }
